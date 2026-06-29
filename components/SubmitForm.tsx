@@ -12,6 +12,14 @@ interface Props {
 
 const EMOJI_LABELS = ["Rough", "Meh", "Okay", "Good", "Great"];
 
+// Pastel top-border accent that rotates per question card
+const CARD_ACCENTS = [
+  "border-t-primary",
+  "border-t-mint-strong",
+  "border-t-peach-strong",
+  "border-t-[#c9a227]",
+];
+
 export default function SubmitForm({ session }: Props) {
   const [scores, setScores] = useState<Record<string, EmojiScore>>({});
   const [chestText, setChestText] = useState("");
@@ -57,24 +65,27 @@ export default function SubmitForm({ session }: Props) {
   if (submitted) {
     return (
       <div className="text-center space-y-4 py-16">
-        <p className="text-6xl">🎉</p>
-        <h2 className="text-2xl font-bold">You&apos;re in!</h2>
-        <p className="text-[var(--muted)]">
-          See you on Friday for the reveal.
-        </p>
+        <p className="text-7xl animate-pulse-once">🎉</p>
+        <h2 className="text-3xl font-extrabold text-ink">You&apos;re in!</h2>
+        <p className="text-muted font-medium">See you on Friday for the reveal.</p>
+        <span className="inline-block rounded-full bg-mint px-4 py-1.5 text-sm font-bold text-on-mint">
+          Answer saved anonymously
+        </span>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
-      {session.questions.map((q) => (
+    <div className="space-y-6">
+      {session.questions.map((q, qi) => (
         <div
           key={q.id}
-          className="bg-[var(--card)] border border-[var(--card-border)] rounded-2xl p-6 space-y-5"
+          className={`lift shadow-soft bg-surface-bright border-t-4 ${
+            CARD_ACCENTS[qi % CARD_ACCENTS.length]
+          } rounded-3xl p-6 sm:p-8 space-y-5`}
         >
-          <p className="font-semibold text-lg leading-snug">{q.label}</p>
-          <div className="flex justify-between items-center gap-2">
+          <p className="font-bold text-lg leading-snug text-ink">{q.label}</p>
+          <div className="flex justify-between items-center gap-1">
             {EMOJI_SCALE.map((emoji, i) => {
               const score = (i + 1) as EmojiScore;
               const selected = scores[q.id] === score;
@@ -85,8 +96,8 @@ export default function SubmitForm({ session }: Props) {
                   aria-label={`${EMOJI_LABELS[i]} (${score}/5)`}
                   aria-pressed={selected}
                   onClick={() => handleScore(q.id, score)}
-                  className={`emoji-btn text-4xl sm:text-5xl p-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] rounded-full ${
-                    selected ? "selected" : "opacity-60 hover:opacity-100"
+                  className={`emoji-btn text-4xl sm:text-5xl p-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-full ${
+                    selected ? "selected" : "opacity-55 hover:opacity-100"
                   }`}
                 >
                   {emoji}
@@ -94,9 +105,12 @@ export default function SubmitForm({ session }: Props) {
               );
             })}
           </div>
-          <div className="flex justify-between px-2">
+          <div className="flex justify-between px-1">
             {EMOJI_LABELS.map((label) => (
-              <span key={label} className="text-xs text-[var(--muted)] w-10 text-center">
+              <span
+                key={label}
+                className="text-xs font-semibold text-muted w-10 text-center"
+              >
                 {label}
               </span>
             ))}
@@ -105,14 +119,14 @@ export default function SubmitForm({ session }: Props) {
       ))}
 
       {/* Free text */}
-      <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-2xl p-6 space-y-4">
-        <p className="font-semibold text-lg">What&apos;s on your chest?</p>
+      <div className="lift shadow-soft bg-surface-bright border-t-4 border-t-[#c9a227] rounded-3xl p-6 sm:p-8 space-y-4">
+        <p className="font-bold text-lg text-ink">What&apos;s on your chest? 💬</p>
         <textarea
           value={chestText}
           onChange={(e) => setChestText(e.target.value)}
-          placeholder="Share anything — frustrations, wins, ideas… (optional)"
+          placeholder="Spill it — a win, a gripe, a wild idea… (totally optional)"
           rows={4}
-          className="w-full bg-[var(--background)] border border-[var(--card-border)] rounded-xl p-4 text-[var(--foreground)] placeholder:text-[var(--muted)] resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition"
+          className="w-full bg-surface border-2 border-outline rounded-2xl p-4 text-ink placeholder:text-muted resize-none focus:outline-none focus:border-primary focus:bg-surface-bright transition"
         />
         <label className="flex items-start gap-3 cursor-pointer group">
           <div className="relative mt-0.5 shrink-0">
@@ -123,19 +137,21 @@ export default function SubmitForm({ session }: Props) {
               className="sr-only"
             />
             <div
-              className={`w-11 h-6 rounded-full transition-colors ${
-                chestPublic ? "bg-[var(--accent)]" : "bg-[var(--card-border)]"
+              className={`w-12 h-7 rounded-full transition-colors ${
+                chestPublic ? "bg-mint-strong" : "bg-outline"
               }`}
             />
             <div
-              className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${
+              className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white shadow transition-transform ${
                 chestPublic ? "translate-x-5" : "translate-x-0"
               }`}
             />
           </div>
           <div>
-            <p className="font-medium text-sm">Show my answer on screen during the session</p>
-            <p className="text-xs text-[var(--muted)] mt-0.5">
+            <p className="font-semibold text-sm text-ink">
+              Show my answer on screen during the session
+            </p>
+            <p className="text-xs text-muted mt-0.5 font-medium">
               If off, your answer is stored privately and never shown publicly.
             </p>
           </div>
@@ -143,20 +159,20 @@ export default function SubmitForm({ session }: Props) {
       </div>
 
       {error && (
-        <p className="text-red-400 text-sm text-center">{error}</p>
+        <p className="text-error text-sm text-center font-semibold">{error}</p>
       )}
 
       <button
         type="button"
         onClick={handleSubmit}
         disabled={!allAnswered || isPending}
-        className="w-full py-4 rounded-2xl bg-[var(--accent)] text-white font-semibold text-lg disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition"
+        className="btn-chunky shadow-glow w-full py-4 rounded-full bg-primary text-on-primary font-bold text-lg disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
       >
-        {isPending ? "Submitting…" : "Submit"}
+        {isPending ? "Submitting…" : "Submit my week 🎉"}
       </button>
 
       {!allAnswered && (
-        <p className="text-center text-sm text-[var(--muted)]">
+        <p className="text-center text-sm text-muted font-medium">
           Answer all four questions to submit.
         </p>
       )}

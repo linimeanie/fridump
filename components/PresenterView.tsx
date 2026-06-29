@@ -74,13 +74,13 @@ export default function PresenterView({ token }: Props) {
         <p className="text-[var(--muted)] text-sm uppercase tracking-widest font-medium">
           {session.week_label}
         </p>
-        <h1 className="text-5xl font-bold">Friday Retro 🎉</h1>
+        <h1 className="text-6xl font-extrabold text-ink">Friday Retro 🎉</h1>
         <p className="text-[var(--muted)] text-xl">
           {total_submissions} {total_submissions === 1 ? "response" : "responses"} this week
         </p>
         <button
           onClick={next}
-          className="mt-8 px-10 py-4 rounded-2xl bg-[var(--accent)] text-white font-semibold text-xl hover:opacity-90 transition"
+          className="mt-8 btn-chunky shadow-glow px-10 py-4 rounded-full bg-primary text-on-primary font-bold text-xl"
         >
           Let&apos;s go →
         </button>
@@ -97,13 +97,13 @@ export default function PresenterView({ token }: Props) {
         <p className="text-[var(--muted)] text-sm uppercase tracking-widest font-medium">
           Question {step} of {question_results.length}
         </p>
-        <h2 className="text-3xl font-bold text-center max-w-xl">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-center max-w-xl text-ink">
           {qr.question.label}
         </h2>
         <EmojiReveal average={qr.average} count={qr.scores.length} />
         <button
           onClick={next}
-          className="mt-10 px-10 py-4 rounded-2xl bg-[var(--accent)] text-white font-semibold text-xl hover:opacity-90 transition"
+          className="mt-10 btn-chunky shadow-glow px-10 py-4 rounded-full bg-primary text-on-primary font-bold text-xl"
         >
           {isLast ? "See what's on their chests →" : "Next question →"}
         </button>
@@ -117,9 +117,9 @@ export default function PresenterView({ token }: Props) {
       <p className="text-[var(--muted)] text-sm uppercase tracking-widest font-medium">
         What&apos;s on their chests
       </p>
-      <h2 className="text-3xl font-bold">Shared thoughts</h2>
+      <h2 className="text-4xl font-extrabold text-ink">Shared thoughts</h2>
       {public_texts.length === 0 ? (
-        <p className="text-[var(--muted)] text-xl mt-4">
+        <p className="text-muted text-xl mt-4 font-medium">
           Nobody opted to share publicly this week.
         </p>
       ) : (
@@ -127,7 +127,7 @@ export default function PresenterView({ token }: Props) {
           {public_texts.map((text, i) => (
             <div
               key={i}
-              className="bg-[var(--card)] border border-[var(--card-border)] rounded-2xl p-6 text-lg leading-relaxed"
+              className="lift shadow-soft bg-surface-bright border-l-4 border-l-mint-strong rounded-3xl p-6 text-lg leading-relaxed text-ink"
             >
               &ldquo;{text}&rdquo;
             </div>

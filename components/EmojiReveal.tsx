@@ -70,7 +70,7 @@ export default function EmojiReveal({ average, count }: Props) {
     <div className="w-full max-w-lg space-y-6" aria-label={`Result: ${EMOJI_SCALE[landedIndex]} (${average}/5)`}>
       {/* Emoji row */}
       <div className="relative">
-        <div className="flex justify-around items-center py-6 px-4 bg-[var(--card)] border border-[var(--card-border)] rounded-3xl">
+        <div className="flex justify-around items-center py-6 px-4 bg-surface-bright shadow-soft rounded-3xl">
           {EMOJI_SCALE.map((emoji, i) => (
             <div key={i} className="flex flex-col items-center gap-2">
               <span
@@ -117,12 +117,12 @@ export default function EmojiReveal({ average, count }: Props) {
       </div>
 
       {/* Score summary */}
-      <div className="text-center space-y-1">
-        <p className="text-[var(--muted)] text-sm">
+      <div className="text-center space-y-2">
+        <p className="text-muted text-sm font-semibold">
           {count} {count === 1 ? "response" : "responses"}
         </p>
         {landed && (
-          <p className="text-2xl font-bold animate-pulse-once">
+          <p className="inline-block rounded-full bg-sunny px-5 py-2 text-2xl font-extrabold text-on-sunny animate-pulse-once">
             {average.toFixed(1)} / 5 — {EMOJI_SCALE[landedIndex]}
           </p>
         )}

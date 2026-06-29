@@ -22,20 +22,20 @@ export default function AdminPanel() {
 
   if (view === "auth") {
     return (
-      <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-2xl p-8 space-y-6">
-        <p className="text-lg font-semibold">Enter admin secret</p>
+      <div className="bg-surface-bright shadow-soft rounded-3xl p-8 space-y-6">
+        <p className="text-lg font-bold text-ink">Enter admin secret</p>
         <form onSubmit={handleAuth} className="space-y-4">
           <input
             type="password"
             value={secret}
             onChange={(e) => setSecret(e.target.value)}
             placeholder="Admin secret"
-            className="w-full bg-[var(--background)] border border-[var(--card-border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition"
+            className="w-full bg-surface border-2 border-outline rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition"
           />
-          {authError && <p className="text-red-400 text-sm">{authError}</p>}
+          {authError && <p className="text-error text-sm">{authError}</p>}
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-[var(--accent)] text-white font-semibold hover:opacity-90 transition"
+            className="w-full py-3 btn-chunky rounded-full bg-primary text-on-primary font-bold hover:opacity-90 transition"
           >
             Enter
           </button>
@@ -161,12 +161,12 @@ function Dashboard({ secret }: { secret: string }) {
   return (
     <div className="space-y-6">
       {error && (
-        <div className="bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl p-4 text-sm">
+        <div className="bg-error-container text-on-error-container rounded-2xl p-4 text-sm font-semibold">
           {error}
         </div>
       )}
       {successMsg && (
-        <div className="bg-green-500/10 border border-green-500/30 text-green-400 rounded-xl p-4 text-sm">
+        <div className="bg-mint text-on-mint rounded-2xl p-4 text-sm font-semibold">
           {successMsg}
         </div>
       )}
@@ -189,7 +189,7 @@ function Dashboard({ secret }: { secret: string }) {
         <button
           onClick={createSession}
           disabled={isPending}
-          className="mt-4 w-full py-3 rounded-xl bg-[var(--accent)] text-white font-semibold hover:opacity-90 disabled:opacity-40 transition"
+          className="mt-4 w-full py-3 btn-chunky rounded-full bg-primary text-on-primary font-bold hover:opacity-90 disabled:opacity-40 transition"
         >
           {session ? "Start new session (archives current)" : "Start first session"}
         </button>
@@ -205,20 +205,20 @@ function Dashboard({ secret }: { secret: string }) {
                   key={q.id}
                   value={q.label}
                   onChange={(e) => updateQuestion(i, e.target.value)}
-                  className="w-full bg-[var(--background)] border border-[var(--card-border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition text-sm"
+                  className="w-full bg-surface border-2 border-outline rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition text-sm"
                 />
               ))}
               <div className="flex gap-3">
                 <button
                   onClick={saveQuestions}
                   disabled={isPending}
-                  className="flex-1 py-2.5 rounded-xl bg-[var(--accent)] text-white font-semibold hover:opacity-90 disabled:opacity-40 transition text-sm"
+                  className="flex-1 py-2.5 btn-chunky rounded-full bg-primary text-on-primary font-bold hover:opacity-90 disabled:opacity-40 transition text-sm"
                 >
                   Save
                 </button>
                 <button
                   onClick={() => { setEditingQuestions(false); setQuestions(session.questions); }}
-                  className="flex-1 py-2.5 rounded-xl bg-[var(--card-border)] text-[var(--foreground)] font-semibold hover:opacity-90 transition text-sm"
+                  className="flex-1 py-2.5 btn-chunky rounded-full bg-surface-container text-[var(--foreground)] font-semibold hover:opacity-90 transition text-sm"
                 >
                   Cancel
                 </button>
@@ -251,7 +251,7 @@ function Dashboard({ secret }: { secret: string }) {
           <button
             onClick={pickPresenter}
             disabled={isPending}
-            className="w-full py-3 rounded-xl bg-[var(--card-border)] text-[var(--foreground)] font-semibold hover:border-[var(--accent)] border border-[var(--card-border)] hover:border-opacity-100 disabled:opacity-40 transition"
+            className="w-full py-3 btn-chunky rounded-full bg-surface-container text-[var(--foreground)] font-semibold hover:border-[var(--accent)] border border-[var(--card-border)] hover:border-opacity-100 disabled:opacity-40 transition"
           >
             🎲 Randomise presenter link
           </button>
@@ -270,7 +270,7 @@ function Dashboard({ secret }: { secret: string }) {
                       `${origin}/present?token=${presenterToken}`
                     )
                   }
-                  className="shrink-0 text-xs px-3 py-2 rounded-lg bg-[var(--accent)] text-white hover:opacity-90 transition"
+                  className="btn-chunky shrink-0 text-xs px-4 py-2 rounded-full bg-primary text-on-primary font-bold hover:opacity-90"
                 >
                   Copy
                 </button>
@@ -285,20 +285,20 @@ function Dashboard({ secret }: { secret: string }) {
         <Card title="Danger zone">
           {resetConfirm ? (
             <div className="space-y-3">
-              <p className="text-sm text-red-400">
+              <p className="text-sm text-error">
                 This permanently deletes all submissions for this session. Are you sure?
               </p>
               <div className="flex gap-3">
                 <button
                   onClick={resetSubmissions}
                   disabled={isPending}
-                  className="flex-1 py-2.5 rounded-xl bg-red-500 text-white font-semibold hover:opacity-90 disabled:opacity-40 transition text-sm"
+                  className="btn-chunky flex-1 py-2.5 rounded-full bg-error text-white font-bold hover:opacity-90 disabled:opacity-40 text-sm"
                 >
                   Yes, clear all
                 </button>
                 <button
                   onClick={() => setResetConfirm(false)}
-                  className="flex-1 py-2.5 rounded-xl bg-[var(--card-border)] font-semibold hover:opacity-90 transition text-sm"
+                  className="flex-1 py-2.5 btn-chunky rounded-full bg-surface-container font-semibold hover:opacity-90 transition text-sm"
                 >
                   Cancel
                 </button>
@@ -307,7 +307,7 @@ function Dashboard({ secret }: { secret: string }) {
           ) : (
             <button
               onClick={() => setResetConfirm(true)}
-              className="w-full py-3 rounded-xl border border-red-500/40 text-red-400 font-semibold hover:bg-red-500/10 transition text-sm"
+              className="btn-chunky w-full py-3 rounded-full border-2 border-error/40 text-error font-bold hover:bg-error-container transition text-sm"
             >
               Clear all submissions
             </button>
@@ -322,8 +322,8 @@ function Dashboard({ secret }: { secret: string }) {
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-2xl p-6 space-y-4">
-      <h2 className="font-semibold text-lg">{title}</h2>
+    <div className="bg-surface-bright shadow-soft rounded-3xl p-6 space-y-4">
+      <h2 className="font-bold text-lg text-ink">{title}</h2>
       {children}
     </div>
   );
@@ -341,7 +341,7 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
 function Code({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <code
-      className={`bg-[var(--background)] rounded-lg px-2 py-1 text-xs font-mono ${className ?? ""}`}
+      className={`bg-surface-container rounded-lg px-2 py-1 text-xs font-mono ${className ?? ""}`}
     >
       {children}
     </code>

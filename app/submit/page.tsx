@@ -19,10 +19,10 @@ export default async function SubmitPage() {
   if (!session || !open) {
     return (
       <main className="flex items-center justify-center min-h-screen p-8">
-        <div className="text-center space-y-4">
-          <p className="text-5xl">🔒</p>
-          <h1 className="text-2xl font-bold">Submissions are closed</h1>
-          <p className="text-[var(--muted)]">
+        <div className="text-center space-y-4 bg-surface-bright shadow-soft rounded-3xl px-10 py-12 max-w-sm">
+          <p className="text-6xl">🔒</p>
+          <h1 className="text-2xl font-extrabold text-ink">Submissions are closed</h1>
+          <p className="text-muted font-medium">
             {session
               ? "The window for this week has passed. See you next Friday!"
               : "No active session. Ask your organiser to start one."}
@@ -35,12 +35,14 @@ export default async function SubmitPage() {
   return (
     <main className="flex flex-col items-center min-h-screen py-16 px-4">
       <div className="w-full max-w-xl space-y-10">
-        <div className="text-center space-y-2">
-          <p className="text-[var(--muted)] text-sm uppercase tracking-widest font-medium">
+        <div className="text-center space-y-3">
+          <span className="inline-block rounded-full bg-primary-container px-4 py-1.5 text-sm font-bold text-on-primary-container">
             Week {session.week_label}
-          </p>
-          <h1 className="text-4xl font-bold">How was your week?</h1>
-          <p className="text-[var(--muted)]">
+          </span>
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-ink">
+            How was your week?
+          </h1>
+          <p className="text-muted font-medium">
             Anonymous — your name is never stored.
           </p>
         </div>

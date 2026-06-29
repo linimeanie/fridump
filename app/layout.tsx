@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
+  variable: "--font-jakarta",
+});
 
 export const metadata: Metadata = {
   title: "Fridays — Team Retro",
@@ -11,8 +15,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${geist.variable} h-full`}>
-      <body className="min-h-full bg-neutral-950 text-white antialiased">
+    <html lang="en" className={`${jakarta.variable} h-full`}>
+      <body className="min-h-full bg-[var(--background)] text-[var(--foreground)] antialiased">
         {children}
       </body>
     </html>
