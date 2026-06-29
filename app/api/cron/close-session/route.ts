@@ -4,7 +4,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 /**
  * GET /api/cron/close-session
  *
- * Called by a Vercel Cron job every hour (see vercel.json).
+ * Called by a Vercel Cron job once daily (see vercel.json).
  * Marks any session past its closes_at timestamp as inactive.
  */
 export async function GET(req: NextRequest) {
