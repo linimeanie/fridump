@@ -37,7 +37,7 @@ export default async function SubmitPage() {
       <div className="w-full max-w-xl space-y-10">
         <div className="text-center space-y-3">
           <span className="inline-block rounded-full bg-primary-container px-4 py-1.5 text-sm font-bold text-on-primary-container">
-            Week {session.week_label}
+            {session.week_label}
           </span>
           <h1 className="text-4xl sm:text-5xl font-extrabold text-ink">
             How was your week?

@@ -1,15 +1,19 @@
 import { EmojiScore } from "./types";
 
-/** Returns the ISO week label for a given date, e.g. "2025-W26" */
+const MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
+/**
+ * Returns a friendly month-relative week label for a given date,
+ * e.g. "July · Week 1". Week-of-month is the date divided into 7-day blocks
+ * (days 1–7 → Week 1, 8–14 → Week 2, …).
+ */
 export function getWeekLabel(date: Date = new Date()): string {
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  const dayNum = d.getUTCDay() || 7;
-  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  const weekNo = Math.ceil(
-    ((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7
-  );
-  return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, "0")}`;
+  const month = MONTH_NAMES[date.getUTCMonth()];
+  const weekOfMonth = Math.ceil(date.getUTCDate() / 7);
+  return `${month} · Week ${weekOfMonth}`;
 }
 
 /**

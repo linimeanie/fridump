@@ -36,12 +36,13 @@ export async function POST(req: NextRequest) {
   await db.from("sessions").update({ is_active: false }).eq("is_active", true);
 
   const now = new Date();
+  const closesAt = nextFriday3am(now);
   const { data, error } = await db
     .from("sessions")
     .insert({
-      week_label: getWeekLabel(now),
+      week_label: getWeekLabel(closesAt),
       is_active: true,
-      closes_at: nextFriday3am(now).toISOString(),
+      closes_at: closesAt.toISOString(),
       presenter_token: generateToken(),
       admin_token: generateToken(),
       questions,
