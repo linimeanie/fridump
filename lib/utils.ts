@@ -1,4 +1,4 @@
-import { EmojiScore } from "./types";
+import { EmojiScore, Question } from "./types";
 
 const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
@@ -62,4 +62,21 @@ export function generateToken(): string {
 /** Clamps a number between min and max. */
 export function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
+}
+
+/**
+ * Builds the row for a brand-new session: a friendly week label derived from
+ * the closing Friday, fresh presenter/admin tokens, and the given questions.
+ * Shared by the admin "Start new session" action and the weekly cron.
+ */
+export function buildSessionInsert(questions: Question[], now: Date = new Date()) {
+  const closesAt = nextFriday3am(now);
+  return {
+    week_label: getWeekLabel(closesAt),
+    is_active: true,
+    closes_at: closesAt.toISOString(),
+    presenter_token: generateToken(),
+    admin_token: generateToken(),
+    questions,
+  };
 }

@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/close-session",
       "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/open-session",
+      "schedule": "0 6 * * 1"
     }
   ]
 }

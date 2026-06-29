@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
-import { generateToken, getWeekLabel, nextFriday3am } from "@/lib/utils";
+import { buildSessionInsert } from "@/lib/utils";
 import { DEFAULT_QUESTIONS, Question } from "@/lib/types";
 
 // GET /api/session — returns the current active session (public info only)
@@ -35,18 +35,9 @@ export async function POST(req: NextRequest) {
   // Deactivate any existing active sessions
   await db.from("sessions").update({ is_active: false }).eq("is_active", true);
 
-  const now = new Date();
-  const closesAt = nextFriday3am(now);
   const { data, error } = await db
     .from("sessions")
-    .insert({
-      week_label: getWeekLabel(closesAt),
-      is_active: true,
-      closes_at: closesAt.toISOString(),
-      presenter_token: generateToken(),
-      admin_token: generateToken(),
-      questions,
-    })
+    .insert(buildSessionInsert(questions))
     .select()
     .single();
 
