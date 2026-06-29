@@ -74,7 +74,7 @@ export default function PresenterView({ token }: Props) {
         <p className="text-[var(--muted)] text-sm uppercase tracking-widest font-medium">
           {session.week_label}
         </p>
-        <h1 className="text-6xl font-extrabold text-ink">Friday Retro 🎉</h1>
+        <h1 className="text-6xl font-extrabold text-ink">Fridump Retro 🎉</h1>
         <p className="text-[var(--muted)] text-xl">
           {total_submissions} {total_submissions === 1 ? "response" : "responses"} this week
         </p>
