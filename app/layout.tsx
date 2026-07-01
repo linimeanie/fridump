@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Onest, Space_Mono } from "next/font/google";
+import { Onest, Space_Mono, Chakra_Petch } from "next/font/google";
+import Logo from "@/components/Logo";
 import "./globals.css";
 
 const onest = Onest({
@@ -15,6 +16,14 @@ const spaceMono = Space_Mono({
   variable: "--font-space-mono",
 });
 
+// Cyberpunk display face for the Fridump logo wordmark
+const chakra = Chakra_Petch({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-logo",
+});
+
 export const metadata: Metadata = {
   title: "Fridump — Team Retro",
   description: "Anonymous weekly retrospective for your team",
@@ -22,17 +31,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${onest.variable} ${spaceMono.variable} h-full`}>
+    <html
+      lang="en"
+      className={`${onest.variable} ${spaceMono.variable} ${chakra.variable} h-full`}
+    >
       <body className="min-h-full bg-[var(--background)] text-[var(--foreground)] antialiased">
         <Link
           href="/"
           aria-label="Fridump home"
-          className="lift fixed top-4 left-4 z-50 flex items-center gap-2 rounded-full bg-surface-bright border border-outline shadow-soft pl-2 pr-4 py-2"
+          className="lift fixed top-4 left-4 z-50 rounded-2xl bg-surface-bright/80 backdrop-blur border border-outline shadow-soft px-3 py-2"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-base">
-            ☕
-          </span>
-          <span className="font-mono font-bold text-ink tracking-tight">Fridump</span>
+          <Logo size="sm" />
         </Link>
         {children}
       </body>

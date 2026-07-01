@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Logo from "@/components/Logo";
 
 export default function Home() {
   return (
@@ -13,8 +14,8 @@ export default function Home() {
         <span className="inline-block rounded-full bg-sunny px-4 py-1.5 text-sm font-bold text-on-sunny shadow-soft">
           ✨ It&apos;s almost Friday, so it is time to talk ☕
         </span>
-        <h1 className="text-5xl sm:text-6xl font-extrabold text-ink">
-          Fridump <span className="inline-block">🎉</span>
+        <h1 className="flex justify-center py-1">
+          <Logo size="lg" />
         </h1>
         <p className="text-muted text-lg font-medium">
           Anonymous weekly retrospectives that actually feel good.
