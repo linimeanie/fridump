@@ -11,8 +11,8 @@ export default function Home() {
       />
 
       <div className="relative text-center space-y-5 max-w-md">
-        <span className="inline-block rounded-full bg-sunny px-4 py-1.5 text-sm font-bold text-on-sunny shadow-soft">
-          ✨ It&apos;s almost Friday, so it is time to talk ☕
+        <span className="inline-block rounded-full bg-primary-container border border-primary/30 px-4 py-1.5 text-sm font-bold text-on-primary-container">
+          time to talk ☕
         </span>
         <h1 className="flex justify-center py-1">
           <Logo size="lg" />
