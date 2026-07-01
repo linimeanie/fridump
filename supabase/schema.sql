@@ -36,7 +36,8 @@ create table if not exists submissions (
   learning      smallint not null check (learning between 1 and 5),
   vibe          smallint not null check (vibe between 1 and 5),
   -- Free-text
-  chest_text    text,                  -- nullable if blank
+  chest_text    text,                  -- "what's on your chest", nullable if blank
+  improve_text  text,                  -- "what could we do differently", nullable if blank
   chest_public  boolean not null default false
 );
 

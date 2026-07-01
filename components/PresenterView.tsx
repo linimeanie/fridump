@@ -57,7 +57,7 @@ export default function PresenterView({ token }: Props) {
   }
 
   const { results, step } = stage;
-  const { question_results, public_texts, total_submissions, session } = results;
+  const { question_results, public_texts, public_improvements, total_submissions, session } = results;
   const totalSteps = question_results.length + 1; // +1 for free text screen
 
   function next() {
@@ -71,7 +71,7 @@ export default function PresenterView({ token }: Props) {
   if (step === 0) {
     return (
       <FullScreen>
-        <p className="text-[var(--muted)] text-sm uppercase tracking-widest font-medium">
+        <p className="font-mono text-muted text-xs uppercase tracking-widest">
           {session.week_label}
         </p>
         <h1 className="text-6xl font-extrabold text-ink">Fridump Retro 🎉</h1>
@@ -94,13 +94,17 @@ export default function PresenterView({ token }: Props) {
     const isLast = step === totalSteps;
     return (
       <FullScreen>
-        <p className="text-[var(--muted)] text-sm uppercase tracking-widest font-medium">
+        <p className="font-mono text-muted text-xs uppercase tracking-widest">
           Question {step} of {question_results.length}
         </p>
         <h2 className="text-3xl sm:text-4xl font-extrabold text-center max-w-xl text-ink">
           {qr.question.label}
         </h2>
-        <EmojiReveal average={qr.average} count={qr.scores.length} />
+        <EmojiReveal
+          median={qr.median}
+          distribution={qr.distribution}
+          count={qr.scores.length}
+        />
         <button
           onClick={next}
           className="mt-10 btn-chunky shadow-glow px-10 py-4 rounded-full bg-primary text-on-primary font-bold text-xl"
@@ -112,29 +116,56 @@ export default function PresenterView({ token }: Props) {
   }
 
   // ── Free text screen ──
+  const nothingShared =
+    public_texts.length === 0 && public_improvements.length === 0;
   return (
     <FullScreen scroll>
-      <p className="text-[var(--muted)] text-sm uppercase tracking-widest font-medium">
-        What&apos;s on their chests
+      <p className="font-mono text-muted text-xs uppercase tracking-widest">
+        In their own words
       </p>
       <h2 className="text-4xl font-extrabold text-ink">Shared thoughts</h2>
-      {public_texts.length === 0 ? (
+
+      {nothingShared ? (
         <p className="text-muted text-xl mt-4 font-medium">
           Nobody opted to share publicly this week.
         </p>
       ) : (
-        <div className="w-full max-w-2xl space-y-4 mt-4">
-          {public_texts.map((text, i) => (
-            <div
-              key={i}
-              className="lift shadow-soft bg-surface-bright border-l-4 border-l-mint-strong rounded-3xl p-6 text-lg leading-relaxed text-ink"
-            >
-              &ldquo;{text}&rdquo;
+        <div className="w-full max-w-2xl space-y-8 mt-4">
+          {public_texts.length > 0 && (
+            <div className="space-y-4">
+              <p className="text-lg font-bold text-ink text-left">
+                What&apos;s on their chests 💬
+              </p>
+              {public_texts.map((text, i) => (
+                <div
+                  key={i}
+                  className="lift shadow-soft bg-surface-bright border-l-4 border-l-primary rounded-3xl p-6 text-lg leading-relaxed text-ink text-left"
+                >
+                  &ldquo;{text}&rdquo;
+                </div>
+              ))}
             </div>
-          ))}
+          )}
+
+          {public_improvements.length > 0 && (
+            <div className="space-y-4">
+              <p className="text-lg font-bold text-ink text-left">
+                What we could do differently 🌱
+              </p>
+              {public_improvements.map((text, i) => (
+                <div
+                  key={i}
+                  className="lift shadow-soft bg-surface-bright border-l-4 border-l-peach-strong rounded-3xl p-6 text-lg leading-relaxed text-ink text-left"
+                >
+                  &ldquo;{text}&rdquo;
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
-      <p className="text-[var(--muted)] text-sm mt-8">
+
+      <p className="text-muted text-sm mt-8 font-medium">
         That&apos;s a wrap for {session.week_label} 🎉
       </p>
     </FullScreen>

@@ -2,8 +2,14 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen gap-10 p-6">
-      <div className="text-center space-y-5 max-w-md">
+    <main className="relative flex flex-col items-center justify-center min-h-screen gap-10 p-6 overflow-hidden">
+      {/* DTM brand glow */}
+      <div
+        aria-hidden="true"
+        className="dtm-hero-glow pointer-events-none absolute inset-0 -z-10"
+      />
+
+      <div className="relative text-center space-y-5 max-w-md">
         <span className="inline-block rounded-full bg-sunny px-4 py-1.5 text-sm font-bold text-on-sunny shadow-soft">
           ✨ It&apos;s almost Friday, so it is time to talk ☕
         </span>

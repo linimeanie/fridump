@@ -49,6 +49,7 @@ export async function POST(req: NextRequest) {
     learning: body.learning as EmojiScore,
     vibe: body.vibe as EmojiScore,
     chest_text: body.chest_text?.trim() || null,
+    improve_text: body.improve_text?.trim() || null,
     chest_public: !!body.chest_public,
   });
 

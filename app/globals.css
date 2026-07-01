@@ -1,46 +1,46 @@
 @import "tailwindcss";
 
 /* ───────────────────────────────────────────────
-   Friday Joy — warm, soft, playful design system
+   DTM — Deep Tech Momentum: near-black, magenta, mono
    ─────────────────────────────────────────────── */
 
 @theme inline {
-  /* Surfaces */
-  --color-surface: #fcf9f4;
-  --color-surface-bright: #ffffff;
-  --color-surface-container: #f0ede9;
+  /* Surfaces (dark) */
+  --color-surface: #0c0c11;
+  --color-surface-bright: #17171f;
+  --color-surface-container: #202029;
 
   /* Text */
-  --color-ink: #2d2d3a;
-  --color-on-surface: #1c1c19;
-  --color-muted: #77767f;
+  --color-ink: #f4f4f6;
+  --color-on-surface: #f4f4f6;
+  --color-muted: #9a9aa6;
 
-  /* Primary — Lavender */
-  --color-primary: #5a5b82;
+  /* Primary — DTM magenta */
+  --color-primary: #ff0073;
   --color-on-primary: #ffffff;
-  --color-primary-container: #d1d1ff;
-  --color-on-primary-container: #2c2d52;
+  --color-primary-container: #2c0a1c;
+  --color-on-primary-container: #ff8cc0;
 
-  /* Secondary — Mint */
-  --color-mint: #beedd8;
-  --color-on-mint: #234e3f;
-  --color-mint-strong: #3c6756;
+  /* Secondary — green (positive / success), dark-friendly */
+  --color-mint: #10312a;
+  --color-on-mint: #6ee7b7;
+  --color-mint-strong: #34d399;
 
-  /* Tertiary — Peach */
-  --color-peach: #f5cdb8;
-  --color-on-peach: #5c4131;
-  --color-peach-strong: #765847;
+  /* Tertiary — violet (from the brand art) */
+  --color-peach: #1a1233;
+  --color-on-peach: #c4b5fd;
+  --color-peach-strong: #8b5cf6;
 
-  /* Celebration */
-  --color-sunny: #fff2ad;
-  --color-on-sunny: #5c4f12;
+  /* Celebration — sun yellow (from the brand art) */
+  --color-sunny: #ffe45e;
+  --color-on-sunny: #2a2205;
 
   /* Lines + error */
-  --color-outline: #c8c5cf;
-  --color-error: #ba1a1a;
-  --color-error-container: #ffdad6;
-  --color-on-error-container: #93000a;
-  --color-success: #3c6756;
+  --color-outline: #2b2b36;
+  --color-error: #ff6b6b;
+  --color-error-container: #3a0f12;
+  --color-on-error-container: #ffb4ab;
+  --color-success: #34d399;
 
   /* Legacy variable bridge — keeps existing component classes working */
   --color-background: var(--color-surface);
@@ -49,18 +49,19 @@
   --color-card-border: var(--color-outline);
   --color-accent: var(--color-primary);
 
-  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-onest), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-space-mono), ui-monospace, "SFMono-Regular", monospace;
 }
 
 /* Legacy CSS variables used directly via bg-[var(--…)] across components */
 :root {
-  --background: #fcf9f4;
-  --foreground: #2d2d3a;
-  --card: #ffffff;
-  --card-border: #e7e4e9;
-  --accent: #5a5b82;
-  --accent-glow: rgba(209, 211, 255, 0.55);
-  --muted: #77767f;
+  --background: #0c0c11;
+  --foreground: #f4f4f6;
+  --card: #17171f;
+  --card-border: #2b2b36;
+  --accent: #ff0073;
+  --accent-glow: rgba(255, 0, 115, 0.45);
+  --muted: #9a9aa6;
 }
 
 * {
@@ -75,7 +76,7 @@ body {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-onest), ui-sans-serif, system-ui, sans-serif;
   font-weight: 500;
   -webkit-font-smoothing: antialiased;
   letter-spacing: -0.005em;
@@ -91,7 +92,7 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Soft, warm scrollbar */
+/* Dark scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -103,14 +104,14 @@ html {
   border-radius: 9999px;
 }
 
-/* ── Depth: ambient glow shadows, not grey dropshadows ── */
+/* ── Depth: dark shadows with a magenta glow, plus a hairline edge ── */
 .shadow-soft {
-  box-shadow: 0 8px 30px -12px rgba(90, 91, 130, 0.22),
-    0 2px 8px -4px rgba(45, 45, 58, 0.06);
+  box-shadow: 0 10px 34px -14px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
 }
 .shadow-glow {
-  box-shadow: 0 12px 40px -10px rgba(209, 211, 255, 0.7),
-    0 4px 12px -6px rgba(90, 91, 130, 0.25);
+  box-shadow: 0 0 44px -8px rgba(255, 0, 115, 0.55),
+    0 10px 28px -12px rgba(0, 0, 0, 0.8);
 }
 
 /* ── The "lift": tactile hover ── */
@@ -172,4 +173,12 @@ html {
 }
 .animate-pulse-once {
   animation: pulse-once 0.5s ease-out;
+}
+
+/* ── DTM hero glow — echoes the brand art (violet → magenta → sun) ── */
+.dtm-hero-glow {
+  background:
+    radial-gradient(60% 55% at 50% 42%, rgba(255, 0, 115, 0.22), transparent 70%),
+    radial-gradient(50% 45% at 50% 60%, rgba(139, 92, 246, 0.18), transparent 72%),
+    radial-gradient(30% 22% at 50% 50%, rgba(255, 228, 94, 0.14), transparent 70%);
 }

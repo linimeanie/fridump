@@ -42,11 +42,30 @@ export function isSubmissionOpen(closesAt: string): boolean {
   return new Date() < new Date(closesAt);
 }
 
-/** Computes the average of emoji scores (1–5), rounded to 1 decimal. */
-export function averageScore(scores: EmojiScore[]): number {
+/**
+ * Computes the median of emoji scores (1–5), rounded to 1 decimal.
+ * The median is robust to a single outlier — pair it with the distribution
+ * to actually surface when one person is unhappy.
+ */
+export function medianScore(scores: EmojiScore[]): number {
   if (scores.length === 0) return 3;
-  const sum = scores.reduce((acc, s) => acc + s, 0);
-  return Math.round((sum / scores.length) * 10) / 10;
+  const sorted = [...scores].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  const median =
+    sorted.length % 2 !== 0
+      ? sorted[mid]
+      : (sorted[mid - 1] + sorted[mid]) / 2;
+  return Math.round(median * 10) / 10;
+}
+
+/**
+ * Counts how many people picked each score, returning a 5-element array
+ * where index 0 = score 1 … index 4 = score 5.
+ */
+export function scoreDistribution(scores: EmojiScore[]): number[] {
+  const counts = [0, 0, 0, 0, 0];
+  for (const s of scores) counts[s - 1] += 1;
+  return counts;
 }
 
 /** Generates a short URL-safe random token (~22 chars). */

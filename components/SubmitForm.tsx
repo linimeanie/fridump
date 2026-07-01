@@ -12,17 +12,18 @@ interface Props {
 
 const EMOJI_LABELS = ["Rough", "Meh", "Okay", "Good", "Great"];
 
-// Pastel top-border accent that rotates per question card
+// Brand top-border accent that alternates magenta / violet per question card
 const CARD_ACCENTS = [
   "border-t-primary",
-  "border-t-mint-strong",
   "border-t-peach-strong",
-  "border-t-[#c9a227]",
+  "border-t-primary",
+  "border-t-peach-strong",
 ];
 
 export default function SubmitForm({ session }: Props) {
   const [scores, setScores] = useState<Record<string, EmojiScore>>({});
   const [chestText, setChestText] = useState("");
+  const [improveText, setImproveText] = useState("");
   const [chestPublic, setChestPublic] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -50,6 +51,7 @@ export default function SubmitForm({ session }: Props) {
             learning: scores["learning"],
             vibe: scores["vibe"],
             chest_text: chestText.trim() || undefined,
+            improve_text: improveText.trim() || undefined,
             chest_public: chestPublic,
           }),
         });
@@ -118,16 +120,38 @@ export default function SubmitForm({ session }: Props) {
         </div>
       ))}
 
-      {/* Free text */}
-      <div className="lift shadow-soft bg-surface-bright border-t-4 border-t-[#c9a227] rounded-3xl p-6 sm:p-8 space-y-4">
-        <p className="font-bold text-lg text-ink">What&apos;s on your chest? 💬</p>
-        <textarea
-          value={chestText}
-          onChange={(e) => setChestText(e.target.value)}
-          placeholder="Spill it — a win, a gripe, a wild idea… (totally optional)"
-          rows={4}
-          className="w-full bg-surface border-2 border-outline rounded-2xl p-4 text-ink placeholder:text-muted resize-none focus:outline-none focus:border-primary focus:bg-surface-bright transition"
-        />
+      {/* Open reflection */}
+      <div className="lift shadow-soft bg-surface-bright border-t-4 border-t-primary rounded-3xl p-6 sm:p-8 space-y-5">
+        <div className="space-y-3">
+          <p className="font-bold text-lg text-ink">What&apos;s on your chest? 💬</p>
+          <textarea
+            value={chestText}
+            onChange={(e) => setChestText(e.target.value)}
+            placeholder="Spill it — a win, a gripe, a wild idea… (totally optional)"
+            rows={4}
+            className="w-full bg-surface border-2 border-outline rounded-2xl p-4 text-ink placeholder:text-muted resize-none focus:outline-none focus:border-primary focus:bg-surface-bright transition"
+          />
+        </div>
+
+        <div className="space-y-3">
+          <p className="font-bold text-lg text-ink">
+            What could we do differently next week? 🌱
+          </p>
+          <textarea
+            value={improveText}
+            onChange={(e) => setImproveText(e.target.value)}
+            placeholder="One small thing that would make next week better — a change, an experiment, something to stop or start… (optional)"
+            rows={4}
+            className="w-full bg-surface border-2 border-outline rounded-2xl p-4 text-ink placeholder:text-muted resize-none focus:outline-none focus:border-primary focus:bg-surface-bright transition"
+          />
+        </div>
+
+        <p className="rounded-2xl bg-primary-container/60 px-4 py-3 text-xs font-medium text-on-primary-container">
+          You&apos;re anonymous by default. If you&apos;d rather own your words,
+          just sign them — e.g. end with{" "}
+          <span className="font-bold">&ldquo;— Lina&rdquo;</span>.
+        </p>
+
         <label className="flex items-start gap-3 cursor-pointer group">
           <div className="relative mt-0.5 shrink-0">
             <input
@@ -138,7 +162,7 @@ export default function SubmitForm({ session }: Props) {
             />
             <div
               className={`w-12 h-7 rounded-full transition-colors ${
-                chestPublic ? "bg-mint-strong" : "bg-outline"
+                chestPublic ? "bg-primary" : "bg-outline"
               }`}
             />
             <div
@@ -149,10 +173,11 @@ export default function SubmitForm({ session }: Props) {
           </div>
           <div>
             <p className="font-semibold text-sm text-ink">
-              Show my answer on screen during the session
+              Show my written answers on screen during the session
             </p>
             <p className="text-xs text-muted mt-0.5 font-medium">
-              If off, your answer is stored privately and never shown publicly.
+              If off, your written answers stay private and are never shown publicly.
+              Your emoji ratings are always anonymous.
             </p>
           </div>
         </label>

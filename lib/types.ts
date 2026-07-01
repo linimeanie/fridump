@@ -39,6 +39,7 @@ export interface Submission {
   learning: EmojiScore;
   vibe: EmojiScore;
   chest_text: string | null;
+  improve_text: string | null;
   chest_public: boolean;
 }
 
@@ -51,18 +52,21 @@ export interface SubmitPayload {
   learning: EmojiScore;
   vibe: EmojiScore;
   chest_text?: string;
+  improve_text?: string;
   chest_public: boolean;
 }
 
 export interface QuestionResult {
   question: Question;
   scores: EmojiScore[];
-  average: number; // 1–5, drives the needle
+  median: number; // 1–5, drives the needle
+  distribution: number[]; // count of people per score, index 0 = score 1 … index 4 = score 5
 }
 
 export interface SessionResults {
   session: Session;
   question_results: QuestionResult[];
   public_texts: string[];
+  public_improvements: string[];
   total_submissions: number;
 }

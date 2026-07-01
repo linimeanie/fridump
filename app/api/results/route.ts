@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
-import { averageScore } from "@/lib/utils";
+import { medianScore, scoreDistribution } from "@/lib/utils";
 import { EmojiScore, QuestionResult, SessionResults, Submission } from "@/lib/types";
 
 // GET /api/results?token=<presenter_token>
@@ -46,20 +46,26 @@ export async function GET(req: NextRequest) {
       return {
         question: q,
         scores,
-        average: averageScore(scores),
+        median: medianScore(scores),
+        distribution: scoreDistribution(scores),
       };
     }
   );
 
-  // Public free-text responses only
+  // Public free-text responses only (chest_public gates both open answers)
   const public_texts = subs
     .filter((s) => s.chest_public && s.chest_text)
     .map((s) => s.chest_text as string);
+
+  const public_improvements = subs
+    .filter((s) => s.chest_public && s.improve_text)
+    .map((s) => s.improve_text as string);
 
   const result: SessionResults = {
     session,
     question_results,
     public_texts,
+    public_improvements,
     total_submissions: subs.length,
   };
 

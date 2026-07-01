@@ -36,7 +36,7 @@ export default async function SubmitPage() {
     <main className="flex flex-col items-center min-h-screen py-16 px-4">
       <div className="w-full max-w-xl space-y-10">
         <div className="text-center space-y-3">
-          <span className="inline-block rounded-full bg-primary-container px-4 py-1.5 text-sm font-bold text-on-primary-container">
+          <span className="inline-block rounded-full bg-primary-container px-4 py-1.5 font-mono text-xs font-bold uppercase tracking-widest text-on-primary-container">
             {session.week_label}
           </span>
           <h1 className="text-4xl sm:text-5xl font-extrabold text-ink">
