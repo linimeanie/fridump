@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { isSubmissionOpen } from "@/lib/utils";
+import { mirrorSubmissionToNotion } from "@/lib/notion";
 import { EmojiScore, SubmitPayload } from "@/lib/types";
 
 // POST /api/submit — anonymous submission
@@ -16,7 +17,7 @@ export async function POST(req: NextRequest) {
   // Verify session exists and is still open
   const { data: session, error: sessionErr } = await db
     .from("sessions")
-    .select("id, is_active, closes_at")
+    .select("id, is_active, closes_at, week_label")
     .eq("id", body.session_id)
     .single();
 
@@ -42,20 +43,37 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  const chestText = body.chest_text?.trim() || null;
+  const improveText = body.improve_text?.trim() || null;
+  const chestPublic = !!body.chest_public;
+
   const { error: insertErr } = await db.from("submissions").insert({
     session_id: body.session_id,
     mood: body.mood as EmojiScore,
     workload: body.workload as EmojiScore,
     learning: body.learning as EmojiScore,
     vibe: body.vibe as EmojiScore,
-    chest_text: body.chest_text?.trim() || null,
-    improve_text: body.improve_text?.trim() || null,
-    chest_public: !!body.chest_public,
+    chest_text: chestText,
+    improve_text: improveText,
+    chest_public: chestPublic,
   });
 
   if (insertErr) {
     return NextResponse.json({ error: insertErr.message }, { status: 500 });
   }
+
+  // Best-effort mirror to Notion (never blocks or fails the submission)
+  await mirrorSubmissionToNotion({
+    week_label: session.week_label,
+    mood: body.mood,
+    workload: body.workload,
+    learning: body.learning,
+    vibe: body.vibe,
+    chest_text: chestText,
+    improve_text: improveText,
+    chest_public: chestPublic,
+    created_at: new Date().toISOString(),
+  });
 
   return NextResponse.json({ ok: true }, { status: 201 });
 }
