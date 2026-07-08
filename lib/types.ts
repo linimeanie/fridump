@@ -11,10 +11,17 @@ export interface Question {
 }
 
 export const DEFAULT_QUESTIONS: Question[] = [
-  { id: "mood",     label: "How was your mood this week?" },
-  { id: "workload", label: "How was your workload?" },
-  { id: "learning", label: "How much did you learn this week?" },
-  { id: "vibe",     label: "How well did we vibe as a team?" },
+  {
+    id: "learning",
+    label:
+      "To what degree did this session improve a skill that makes you a better founder?",
+  },
+  { id: "mood", label: "How was your mood this week?" },
+  {
+    id: "workload",
+    label:
+      "How manageable was your workload this week (for an early-stage start-up environment)?",
+  },
 ];
 
 // ─── Database row shapes ───────────────────────
@@ -37,7 +44,7 @@ export interface Submission {
   mood: EmojiScore;
   workload: EmojiScore;
   learning: EmojiScore;
-  vibe: EmojiScore;
+  vibe: EmojiScore | null;
   chest_text: string | null;
   improve_text: string | null;
   chest_public: boolean;
@@ -50,7 +57,7 @@ export interface SubmitPayload {
   mood: EmojiScore;
   workload: EmojiScore;
   learning: EmojiScore;
-  vibe: EmojiScore;
+  vibe?: EmojiScore;
   chest_text?: string;
   improve_text?: string;
   chest_public: boolean;

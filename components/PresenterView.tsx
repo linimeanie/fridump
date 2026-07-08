@@ -109,7 +109,7 @@ export default function PresenterView({ token }: Props) {
           onClick={next}
           className="mt-10 btn-chunky shadow-glow px-10 py-4 rounded-full bg-primary text-on-primary font-bold text-xl"
         >
-          {isLast ? "See what's on their chests →" : "Next question →"}
+          {isLast ? "See what they wrote →" : "Next question →"}
         </button>
       </FullScreen>
     );
@@ -134,7 +134,7 @@ export default function PresenterView({ token }: Props) {
           {public_texts.length > 0 && (
             <div className="space-y-4">
               <p className="text-lg font-bold text-ink text-left">
-                What&apos;s on their chests 💬
+                What keeps them up at night 🌙
               </p>
               {public_texts.map((text, i) => (
                 <div
@@ -150,7 +150,7 @@ export default function PresenterView({ token }: Props) {
           {public_improvements.length > 0 && (
             <div className="space-y-4">
               <p className="text-lg font-bold text-ink text-left">
-                What we could do differently 🌱
+                Most proud of this week 🏆
               </p>
               {public_improvements.map((text, i) => (
                 <div

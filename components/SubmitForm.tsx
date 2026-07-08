@@ -49,7 +49,6 @@ export default function SubmitForm({ session }: Props) {
             mood: scores["mood"],
             workload: scores["workload"],
             learning: scores["learning"],
-            vibe: scores["vibe"],
             chest_text: chestText.trim() || undefined,
             improve_text: improveText.trim() || undefined,
             chest_public: chestPublic,
@@ -123,11 +122,13 @@ export default function SubmitForm({ session }: Props) {
       {/* Open reflection */}
       <div className="lift shadow-soft bg-surface-bright border-t-4 border-t-primary rounded-3xl p-6 sm:p-8 space-y-5">
         <div className="space-y-3">
-          <p className="font-bold text-lg text-ink">What&apos;s on your chest? 💬</p>
+          <p className="font-bold text-lg text-ink">
+            What keeps you up at night right now? 🌙
+          </p>
           <textarea
             value={chestText}
             onChange={(e) => setChestText(e.target.value)}
-            placeholder="Spill it — a win, a gripe, a wild idea… (totally optional)"
+            placeholder="The thing on your mind — a worry, a risk, an open question… (optional)"
             rows={4}
             className="w-full bg-surface border-2 border-outline rounded-2xl p-4 text-ink placeholder:text-muted resize-none focus:outline-none focus:border-primary focus:bg-surface-bright transition"
           />
@@ -135,12 +136,12 @@ export default function SubmitForm({ session }: Props) {
 
         <div className="space-y-3">
           <p className="font-bold text-lg text-ink">
-            What could we do differently next week? 🌱
+            What are you most proud of this week at DTM? 🏆
           </p>
           <textarea
             value={improveText}
             onChange={(e) => setImproveText(e.target.value)}
-            placeholder="One small thing that would make next week better — a change, an experiment, something to stop or start… (optional)"
+            placeholder="A win, a milestone, something you shipped or figured out… (optional)"
             rows={4}
             className="w-full bg-surface border-2 border-outline rounded-2xl p-4 text-ink placeholder:text-muted resize-none focus:outline-none focus:border-primary focus:bg-surface-bright transition"
           />
@@ -198,7 +199,7 @@ export default function SubmitForm({ session }: Props) {
 
       {!allAnswered && (
         <p className="text-center text-sm text-muted font-medium">
-          Answer all four questions to submit.
+          Answer all three questions to submit.
         </p>
       )}
     </div>

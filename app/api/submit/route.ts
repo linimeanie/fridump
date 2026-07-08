@@ -31,11 +31,13 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Validate scores
-  const scores: (keyof SubmitPayload)[] = ["mood", "workload", "learning", "vibe"];
-  for (const key of scores) {
-    const val = body[key] as number;
-    if (!Number.isInteger(val) || val < 1 || val > 5) {
+  // Validate scores. mood/workload/learning are required; vibe is optional
+  // (kept for older sessions that still ask it).
+  const required: (keyof SubmitPayload)[] = ["mood", "workload", "learning"];
+  for (const key of [...required, "vibe" as const]) {
+    const val = body[key];
+    if (key === "vibe" && (val === undefined || val === null)) continue;
+    if (!Number.isInteger(val) || (val as number) < 1 || (val as number) > 5) {
       return NextResponse.json(
         { error: `Invalid value for ${key}` },
         { status: 400 }
@@ -52,7 +54,7 @@ export async function POST(req: NextRequest) {
     mood: body.mood as EmojiScore,
     workload: body.workload as EmojiScore,
     learning: body.learning as EmojiScore,
-    vibe: body.vibe as EmojiScore,
+    vibe: (body.vibe as EmojiScore) ?? null,
     chest_text: chestText,
     improve_text: improveText,
     chest_public: chestPublic,
@@ -68,7 +70,7 @@ export async function POST(req: NextRequest) {
     mood: body.mood,
     workload: body.workload,
     learning: body.learning,
-    vibe: body.vibe,
+    vibe: body.vibe ?? null,
     chest_text: chestText,
     improve_text: improveText,
     chest_public: chestPublic,

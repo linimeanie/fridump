@@ -12,7 +12,7 @@ export interface NotionMirrorInput {
   mood: number;
   workload: number;
   learning: number;
-  vibe: number;
+  vibe: number | null;
   chest_text: string | null;
   improve_text: string | null;
   chest_public: boolean;
@@ -54,12 +54,11 @@ export async function mirrorSubmissionToNotion(
           Entry: { title: text(`${input.week_label} · ${dateOnly}`) },
           Date: { date: { start: input.created_at } },
           Week: { rich_text: text(input.week_label) },
+          "Founder skill": { number: input.learning },
           Mood: { number: input.mood },
           Workload: { number: input.workload },
-          Learning: { number: input.learning },
-          Vibe: { number: input.vibe },
-          "On your chest": { rich_text: text(input.chest_text) },
-          "Do differently": { rich_text: text(input.improve_text) },
+          "Up at night": { rich_text: text(input.chest_text) },
+          "Proud of": { rich_text: text(input.improve_text) },
           "Shared publicly": { checkbox: input.chest_public },
         },
       }),
