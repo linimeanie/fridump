@@ -104,6 +104,7 @@ export default function PresenterView({ token }: Props) {
           median={qr.median}
           distribution={qr.distribution}
           count={qr.scores.length}
+          scale={qr.scale}
         />
         <button
           onClick={next}

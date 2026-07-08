@@ -1,4 +1,4 @@
-import { EmojiScore, Question } from "./types";
+import { Question } from "./types";
 
 const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
@@ -43,12 +43,13 @@ export function isSubmissionOpen(closesAt: string): boolean {
 }
 
 /**
- * Computes the median of emoji scores (1–5), rounded to 1 decimal.
+ * Computes the median of rating scores, rounded to 1 decimal.
  * The median is robust to a single outlier — pair it with the distribution
- * to actually surface when one person is unhappy.
+ * to actually surface when one person is unhappy. Falls back to the scale's
+ * midpoint when there are no answers.
  */
-export function medianScore(scores: EmojiScore[]): number {
-  if (scores.length === 0) return 3;
+export function medianScore(scores: number[], scale = 5): number {
+  if (scores.length === 0) return (scale + 1) / 2;
   const sorted = [...scores].sort((a, b) => a - b);
   const mid = Math.floor(sorted.length / 2);
   const median =
@@ -59,12 +60,14 @@ export function medianScore(scores: EmojiScore[]): number {
 }
 
 /**
- * Counts how many people picked each score, returning a 5-element array
- * where index 0 = score 1 … index 4 = score 5.
+ * Counts how many people picked each score, returning a `scale`-length array
+ * where index 0 = score 1 … index (scale-1) = score `scale`.
  */
-export function scoreDistribution(scores: EmojiScore[]): number[] {
-  const counts = [0, 0, 0, 0, 0];
-  for (const s of scores) counts[s - 1] += 1;
+export function scoreDistribution(scores: number[], scale = 5): number[] {
+  const counts = new Array(scale).fill(0);
+  for (const s of scores) {
+    if (s >= 1 && s <= scale) counts[s - 1] += 1;
+  }
   return counts;
 }
 

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { medianScore, scoreDistribution } from "@/lib/utils";
-import { EmojiScore, QuestionResult, SessionResults, Submission } from "@/lib/types";
+import { QuestionResult, SessionResults, Submission } from "@/lib/types";
 
 // GET /api/results?token=<presenter_token>
 // Returns aggregated results for the active session.
@@ -40,14 +40,19 @@ export async function GET(req: NextRequest) {
   // Build per-question results
   const questionKeys = ["mood", "workload", "learning", "vibe"] as const;
   const question_results: QuestionResult[] = session.questions.map(
-    (q: { id: string; label: string }) => {
+    (q: { id: string; label: string; scale?: 5 | 10 }) => {
       const key = q.id as (typeof questionKeys)[number];
-      const scores = subs.map((s) => s[key] as EmojiScore);
+      const scale = q.scale ?? 5;
+      // Only count people who actually answered this rating.
+      const scores = subs
+        .map((s) => s[key])
+        .filter((v): v is number => v != null);
       return {
         question: q,
+        scale,
         scores,
-        median: medianScore(scores),
-        distribution: scoreDistribution(scores),
+        median: medianScore(scores, scale),
+        distribution: scoreDistribution(scores, scale),
       };
     }
   );

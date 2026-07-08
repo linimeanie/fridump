@@ -4,27 +4,34 @@ import { useEffect, useRef, useState } from "react";
 import { EMOJI_SCALE } from "@/lib/types";
 
 interface Props {
-  median: number; // 1.0 – 5.0, drives the needle
-  distribution: number[]; // people per score, index 0 = score 1 … index 4 = score 5
+  median: number; // 1..scale, drives the needle
+  distribution: number[]; // people per score, length = scale
   count: number;
+  scale?: 5 | 10; // 5 = emoji, 10 = numeric
 }
 
 const EMOJI_LABELS = ["Rough", "Meh", "Okay", "Good", "Great"];
 
 /**
- * Animated emoji reveal:
- * - Shows the 5 emojis in a row, each with a stack of little people who picked it
- * - A needle sweeps left→right and lands on the median score
- * - The distribution makes a lone unhappy voice visible (the median won't)
+ * Animated reveal:
+ * - Emoji scale (5): the five faces + word labels.
+ * - Numeric scale (10): the numbers 1–10.
+ * Each column shows a stack of the people (🧌) who picked it, and a needle
+ * sweeps to the median. The distribution surfaces a lone voice the median hides.
  */
-export default function EmojiReveal({ median, distribution, count }: Props) {
+export default function EmojiReveal({
+  median,
+  distribution,
+  count,
+  scale = 5,
+}: Props) {
   const [needlePos, setNeedlePos] = useState(0); // 0–100 (percentage)
   const [landed, setLanded] = useState(false);
   const [started, setStarted] = useState(false);
   const rafRef = useRef<number | null>(null);
 
-  // Convert median (1–5) to a percentage position across the 5 emoji slots.
-  const targetPct = ((median - 1) / 4) * 100; // 0 % = leftmost, 100 % = rightmost
+  const isEmoji = scale === 5;
+  const targetPct = ((median - 1) / (scale - 1)) * 100;
 
   useEffect(() => {
     const timeout = setTimeout(() => setStarted(true), 400);
@@ -33,20 +40,15 @@ export default function EmojiReveal({ median, distribution, count }: Props) {
 
   useEffect(() => {
     if (!started) return;
-
-    const duration = 2200; // ms
+    const duration = 2200;
     const startTime = performance.now();
-    const startPos = 0;
 
     function easeOut(t: number): number {
       return 1 - Math.pow(1 - t, 3);
     }
-
     function tick(now: number) {
-      const elapsed = now - startTime;
-      const t = Math.min(elapsed / duration, 1);
-      const eased = easeOut(t);
-      setNeedlePos(startPos + eased * targetPct);
+      const t = Math.min((now - startTime) / duration, 1);
+      setNeedlePos(easeOut(t) * targetPct);
       if (t < 1) {
         rafRef.current = requestAnimationFrame(tick);
       } else {
@@ -54,49 +56,70 @@ export default function EmojiReveal({ median, distribution, count }: Props) {
         setLanded(true);
       }
     }
-
     rafRef.current = requestAnimationFrame(tick);
     return () => {
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
   }, [started, targetPct]);
 
-  // Which emoji index the median lands on (0-based)
-  const landedIndex = Math.min(4, Math.max(0, Math.round(median) - 1));
+  const landedIndex = Math.min(scale - 1, Math.max(0, Math.round(median) - 1));
 
   return (
     <div
-      className="w-full max-w-lg space-y-6"
-      aria-label={`Median result: ${EMOJI_SCALE[landedIndex]} (${median}/5), from ${count} responses`}
+      className="w-full max-w-2xl space-y-6"
+      aria-label={`Median result: ${median} out of ${scale}, from ${count} responses`}
     >
-      {/* Emoji row */}
       <div className="relative">
-        <div className="flex justify-around items-start py-6 px-4 bg-surface-bright shadow-soft rounded-3xl">
-          {EMOJI_SCALE.map((emoji, i) => {
-            const people = distribution[i] ?? 0;
+        <div
+          className={`flex justify-around items-start bg-surface-bright shadow-soft rounded-3xl py-6 ${
+            isEmoji ? "px-4" : "px-3"
+          }`}
+        >
+          {distribution.map((people, i) => {
+            const active = landed && i === landedIndex;
             return (
-              <div key={i} className="flex flex-col items-center gap-2 w-1/5">
-                <span
-                  className={`text-5xl sm:text-6xl transition-all duration-500 ${
-                    landed && i === landedIndex
-                      ? "scale-150 drop-shadow-lg"
-                      : landed
-                      ? "opacity-40 scale-90"
-                      : "opacity-70"
-                  }`}
-                  aria-hidden="true"
-                >
-                  {emoji}
-                </span>
-                <span
-                  className={`text-xs transition-colors duration-500 ${
-                    landed && i === landedIndex
-                      ? "text-ink font-bold"
-                      : "text-muted font-semibold"
-                  }`}
-                >
-                  {EMOJI_LABELS[i]}
-                </span>
+              <div
+                key={i}
+                className="flex flex-col items-center gap-2"
+                style={{ width: `${100 / scale}%` }}
+              >
+                {isEmoji ? (
+                  <span
+                    className={`text-5xl sm:text-6xl transition-all duration-500 ${
+                      active
+                        ? "scale-150 drop-shadow-lg"
+                        : landed
+                        ? "opacity-40 scale-90"
+                        : "opacity-70"
+                    }`}
+                    aria-hidden="true"
+                  >
+                    {EMOJI_SCALE[i]}
+                  </span>
+                ) : (
+                  <span
+                    className={`flex h-9 w-9 items-center justify-center rounded-full text-lg font-bold border-2 transition-all duration-500 ${
+                      active
+                        ? "bg-primary text-on-primary border-primary scale-125 shadow-glow"
+                        : landed
+                        ? "opacity-40 border-outline text-ink"
+                        : "opacity-80 border-outline text-ink"
+                    }`}
+                    aria-hidden="true"
+                  >
+                    {i + 1}
+                  </span>
+                )}
+
+                {isEmoji && (
+                  <span
+                    className={`text-xs transition-colors duration-500 ${
+                      active ? "text-ink font-bold" : "text-muted font-semibold"
+                    }`}
+                  >
+                    {EMOJI_LABELS[i]}
+                  </span>
+                )}
 
                 {/* Little people who picked this score */}
                 <div
@@ -106,7 +129,11 @@ export default function EmojiReveal({ median, distribution, count }: Props) {
                   aria-label={`${people} ${people === 1 ? "person" : "people"}`}
                 >
                   {Array.from({ length: people }).map((_, p) => (
-                    <span key={p} className="text-sm leading-none" aria-hidden="true">
+                    <span
+                      key={p}
+                      className={isEmoji ? "text-sm leading-none" : "text-xs leading-none"}
+                      aria-hidden="true"
+                    >
                       🧌
                     </span>
                   ))}
@@ -139,7 +166,8 @@ export default function EmojiReveal({ median, distribution, count }: Props) {
         </p>
         {landed && (
           <p className="inline-block rounded-full bg-sunny px-5 py-2 text-2xl font-extrabold text-on-sunny animate-pulse-once">
-            Median {median.toFixed(1)} / 5 — {EMOJI_SCALE[landedIndex]}
+            Median {median.toFixed(1)} / {scale}
+            {isEmoji ? ` — ${EMOJI_SCALE[landedIndex]}` : ""}
           </p>
         )}
       </div>

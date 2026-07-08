@@ -8,6 +8,8 @@ export type EmojiScore = 1 | 2 | 3 | 4 | 5;
 export interface Question {
   id: string;
   label: string;
+  // Rating scale: 5 = emoji picker (default), 10 = numeric 1–10 scale.
+  scale?: 5 | 10;
 }
 
 export const DEFAULT_QUESTIONS: Question[] = [
@@ -15,12 +17,12 @@ export const DEFAULT_QUESTIONS: Question[] = [
     id: "learning",
     label:
       "To what degree did this session improve a skill that makes you a better founder?",
+    scale: 10,
   },
   { id: "mood", label: "How was your mood this week?" },
   {
     id: "workload",
-    label:
-      "How manageable was your workload this week (for an early-stage start-up environment)?",
+    label: "How manageable was your workload this week?",
   },
 ];
 
@@ -41,10 +43,10 @@ export interface Submission {
   id: string;
   session_id: string;
   created_at: string;
-  mood: EmojiScore;
-  workload: EmojiScore;
-  learning: EmojiScore;
-  vibe: EmojiScore | null;
+  mood: number | null;
+  workload: number | null;
+  learning: number | null;
+  vibe: number | null;
   chest_text: string | null;
   improve_text: string | null;
   chest_public: boolean;
@@ -52,12 +54,13 @@ export interface Submission {
 
 // ─── API payload shapes ────────────────────────
 
+// All rating answers are optional — a person can submit with any subset.
 export interface SubmitPayload {
   session_id: string;
-  mood: EmojiScore;
-  workload: EmojiScore;
-  learning: EmojiScore;
-  vibe?: EmojiScore;
+  mood?: number;
+  workload?: number;
+  learning?: number;
+  vibe?: number;
   chest_text?: string;
   improve_text?: string;
   chest_public: boolean;
@@ -65,9 +68,10 @@ export interface SubmitPayload {
 
 export interface QuestionResult {
   question: Question;
-  scores: EmojiScore[];
-  median: number; // 1–5, drives the needle
-  distribution: number[]; // count of people per score, index 0 = score 1 … index 4 = score 5
+  scale: 5 | 10; // 5 = emoji, 10 = numeric
+  scores: number[]; // non-null answers only
+  median: number; // drives the needle (1–scale)
+  distribution: number[]; // count per score, index 0 = score 1 … length = scale
 }
 
 export interface SessionResults {

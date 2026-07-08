@@ -9,9 +9,9 @@ const NOTION_VERSION = "2022-06-28";
 
 export interface NotionMirrorInput {
   week_label: string;
-  mood: number;
-  workload: number;
-  learning: number;
+  mood: number | null;
+  workload: number | null;
+  learning: number | null;
   vibe: number | null;
   chest_text: string | null;
   improve_text: string | null;
