@@ -24,7 +24,6 @@ export default function SubmitForm({ session }: Props) {
   const [scores, setScores] = useState<Record<string, number>>({});
   const [chestText, setChestText] = useState("");
   const [improveText, setImproveText] = useState("");
-  const [chestPublic, setChestPublic] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -55,7 +54,7 @@ export default function SubmitForm({ session }: Props) {
             learning: scores["learning"],
             chest_text: chestText.trim() || undefined,
             improve_text: improveText.trim() || undefined,
-            chest_public: chestPublic,
+            chest_public: true,
           }),
         });
         const json = await res.json();
@@ -167,7 +166,7 @@ export default function SubmitForm({ session }: Props) {
           <textarea
             value={chestText}
             onChange={(e) => setChestText(e.target.value)}
-            placeholder="The thing on your mind — a worry, a risk, an open question…"
+            placeholder="The thing that's on your mind — a worry, a risk, an open question…"
             rows={4}
             className="w-full bg-surface border-2 border-outline rounded-2xl p-4 text-ink placeholder:text-muted resize-none focus:outline-none focus:border-primary focus:bg-surface-bright transition"
           />
@@ -175,52 +174,23 @@ export default function SubmitForm({ session }: Props) {
 
         <div className="space-y-3">
           <p className="font-bold text-lg text-ink">
-            What could we do differently next week? 🌱
+            What are you most proud of this week? 🏆
           </p>
           <textarea
             value={improveText}
             onChange={(e) => setImproveText(e.target.value)}
-            placeholder="One small thing that would make next week better — a change, an experiment, something to stop or start…"
+            placeholder="A win, a milestone, something you shipped or figured out…"
             rows={4}
             className="w-full bg-surface border-2 border-outline rounded-2xl p-4 text-ink placeholder:text-muted resize-none focus:outline-none focus:border-primary focus:bg-surface-bright transition"
           />
         </div>
 
         <p className="rounded-2xl bg-primary-container/60 px-4 py-3 text-xs font-medium text-on-primary-container">
-          You&apos;re anonymous by default. If you&apos;d rather own your words,
-          just sign them — e.g. end with{" "}
+          You&apos;re anonymous by default — anything you write here is shared with
+          the team (that&apos;s the point). Don&apos;t want to share it? Just leave it
+          blank. Want to own your words? Sign them — e.g. end with{" "}
           <span className="font-bold">&ldquo;— Lina&rdquo;</span>.
         </p>
-
-        <label className="flex items-start gap-3 cursor-pointer group">
-          <div className="relative mt-0.5 shrink-0">
-            <input
-              type="checkbox"
-              checked={chestPublic}
-              onChange={(e) => setChestPublic(e.target.checked)}
-              className="sr-only"
-            />
-            <div
-              className={`w-12 h-7 rounded-full transition-colors ${
-                chestPublic ? "bg-primary" : "bg-outline"
-              }`}
-            />
-            <div
-              className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white shadow transition-transform ${
-                chestPublic ? "translate-x-5" : "translate-x-0"
-              }`}
-            />
-          </div>
-          <div>
-            <p className="font-semibold text-sm text-ink">
-              Show my written answers on screen during the session
-            </p>
-            <p className="text-xs text-muted mt-0.5 font-medium">
-              If off, your written answers stay private and are never shown publicly.
-              Your ratings are always anonymous.
-            </p>
-          </div>
-        </label>
       </div>
 
       {error && (

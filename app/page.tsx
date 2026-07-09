@@ -18,7 +18,7 @@ export default function Home() {
           <Logo size="lg" />
         </h1>
         <p className="text-muted text-lg font-medium">
-          Anonymous weekly retrospectives that actually feel good.
+          Anonymous weekly retrospectives.
         </p>
       </div>
 

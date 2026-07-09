@@ -16,7 +16,7 @@ export const DEFAULT_QUESTIONS: Question[] = [
   {
     id: "learning",
     label:
-      "To what degree did this session improve a skill that makes you a better founder?",
+      "To what degree did today's 'Better Every Week' session improve a skill that makes you a better founder?",
     scale: 10,
   },
   { id: "mood", label: "How was your mood this week?" },
