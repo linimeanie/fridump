@@ -6,7 +6,7 @@ import { DEFAULT_QUESTIONS } from "@/lib/types";
 /**
  * GET /api/cron/open-session
  *
- * Called by a Vercel Cron job every Monday morning (see vercel.json).
+ * Called by a Vercel Cron job every Sunday at midnight UTC (see vercel.json).
  * Archives the current active session and opens a fresh one for the new week,
  * carrying over the previous session's questions so admin edits persist.
  */

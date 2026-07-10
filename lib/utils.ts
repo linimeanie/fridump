@@ -17,23 +17,17 @@ export function getWeekLabel(date: Date = new Date()): string {
 }
 
 /**
- * Returns the next Friday at 03:00 UTC from the given reference date.
- * If today is already Friday before 03:00, returns today at 03:00 UTC.
+ * Returns the next Sunday at 00:00 UTC strictly after the given reference date.
+ * This is when the week renews — submissions stay open until then.
  */
-export function nextFriday3am(from: Date = new Date()): Date {
+export function nextSundayMidnight(from: Date = new Date()): Date {
   const d = new Date(from);
-  const day = d.getUTCDay(); // 0=Sun … 5=Fri … 6=Sat
-  const daysUntilFriday = day <= 5 ? 5 - day : 7 - (day - 5);
-
-  const isFridayPast3 =
-    day === 5 &&
-    (d.getUTCHours() > 3 || (d.getUTCHours() === 3 && d.getUTCMinutes() > 0));
-
+  const daysUntilSunday = (7 - d.getUTCDay()) % 7; // 0 when today is Sunday
   const target = new Date(d);
-  target.setUTCDate(
-    d.getUTCDate() + (daysUntilFriday === 0 && isFridayPast3 ? 7 : daysUntilFriday)
-  );
-  target.setUTCHours(3, 0, 0, 0);
+  target.setUTCDate(d.getUTCDate() + daysUntilSunday);
+  target.setUTCHours(0, 0, 0, 0);
+  // Strictly after `from` — if we landed on now-or-earlier, jump a full week.
+  if (target <= d) target.setUTCDate(target.getUTCDate() + 7);
   return target;
 }
 
@@ -87,16 +81,15 @@ export function clamp(value: number, min: number, max: number): number {
 }
 
 /**
- * Builds the row for a brand-new session: a friendly week label derived from
- * the closing Friday, fresh presenter/admin tokens, and the given questions.
- * Shared by the admin "Start new session" action and the weekly cron.
+ * Builds the row for a brand-new session: a friendly week label for the week
+ * it opens, submissions open until the next Sunday-midnight renewal, plus fresh
+ * tokens. Shared by the admin "Start new session" action and the weekly cron.
  */
 export function buildSessionInsert(questions: Question[], now: Date = new Date()) {
-  const closesAt = nextFriday3am(now);
   return {
-    week_label: getWeekLabel(closesAt),
+    week_label: getWeekLabel(now),
     is_active: true,
-    closes_at: closesAt.toISOString(),
+    closes_at: nextSundayMidnight(now).toISOString(),
     presenter_token: generateToken(),
     admin_token: generateToken(),
     questions,
